@@ -1,0 +1,307 @@
+<?php
+function a2zt_head(){
+	global $awk_options,$toolbar_position;
+		//@credit : http://www.wizzud.com/jqDock/
+	?>
+<style type='text/css'>
+<?php 
+
+if ($toolbar_position == 'topright'){
+?>
+#pageshare {position:fixed; top:5%; right:10px; float:left; border: 1px solid black; border-radius:5px;-moz-border-radius:5px;-webkit-border-radius:5px;background-color:#eff3fa;padding:0 0 2px 0;z-index:999;}  
+<?php 
+}elseif ($toolbar_position == 'topleft'){
+?>
+#pageshare {position:fixed; top:5%; left:10px; float:left; border: 1px solid black; border-radius:5px;-moz-border-radius:5px;-webkit-border-radius:5px;background-color:#eff3fa;padding:0 0 2px 0;z-index:999;}  
+<?php 
+}elseif ($toolbar_position == 'bottomright'){
+?>
+#pageshare {position:fixed; bottom:5%; right:10px; float:left; border: 1px solid black; border-radius:5px;-moz-border-radius:5px;-webkit-border-radius:5px;background-color:#eff3fa;padding:0 0 2px 0;z-index:999;}  
+<?php 
+}elseif ($toolbar_position == 'bottomleft'){
+?> 
+#pageshare {position:fixed; bottom:5%; left:10px; float:left; border: 1px solid black; border-radius:5px;-moz-border-radius:5px;-webkit-border-radius:5px;background-color:#eff3fa;padding:0 0 2px 0;z-index:999;}  
+<?php }else{ ?> 
+#pageshare {position:fixed; bottom:5%; right:10px; float:left; border: 1px solid black; border-radius:5px;-moz-border-radius:5px;-webkit-border-radius:5px;background-color:#eff3fa;padding:0 0 2px 0;z-index:999;}  
+<?php } ?>
+#pageshare .sbutton {float:left;clear:both;margin:5px 5px 0 5px;}  
+#fancybox-wrap{z-index:1000000;position:fixed;}
+</style>
+<script language="javascript">
+var ajaxObj="";
+jQuery(document).ready(function(){
+  $(document).mousemove(function(e){
+ $('#x').val(e.pageX);
+ $('#y').val(e.pageY);
+  });
+})
+function getSelText()
+{
+	var txt = "";
+    if (window.getSelection){  txt = window.getSelection();   }
+   else if (document.getSelection){ txt = document.getSelection();  }
+   else if (document.selection){ txt = document.selection.createRange().text; }
+   else return;
+if(txt==""){return;}
+jQuery('#popup').css("top",(jQuery("#y").val()) + "px");
+jQuery('#popup').css("left",(jQuery("#x").val()) + "px");
+
+jQuery('#popup').fadeIn(300);
+jQuery('#dic_content').html("loading....");
+
+if(ajaxObj!=""){ajaxObj.abort(); }
+
+ajaxObj=jQuery.ajax({
+ type: "GET",
+ url: "http://ayar.co/remote_search.php?word=" +txt,
+ success: function(content){
+jQuery('#dic_content').html(content);
+}
+});
+
+}
+</script>
+<script type="text/javascript">
+document.ondblclick = function(){
+getSelText();
+};
+</script>
+
+<?php
+}
+function font_cookies_js(){
+	
+if (! wp_is_mobile()){
+	?>
+<script type="text/javascript">
+function zg_setcookies(){
+	document.cookie = 'font=zawgyi';  
+	window.location.reload()
+	}
+function ay_setcookies(){
+	document.cookie = 'font=ayar';  
+	window.location.reload()
+	}
+function mm3_setcookies(){
+	document.cookie = 'font=mm3';  
+	window.location.reload()
+	}
+</script>	
+<?php
+		}
+	}
+
+add_action('wp_head', 'font_cookies_js');	
+
+add_action('wp_head', 'a2zt_head');
+//add_action('admin_head', 'a2zt_head');
+add_action('login_head', 'a2zt_head');
+add_action('register_head', 'a2zt_head');
+
+function a2zt_footer() {
+	global $toolbar_position;
+?>
+<!-- /*a2zt footer*/ -->
+<?php 	
+	toolbar_html(); //print toolbarhtml
+?>
+
+  <script type="text/javascript">
+	var $ = jQuery.noConflict();
+
+	var ajaxObj="";
+	jQuery(document).ready(function($){
+	  $(document).mousemove(function(e){
+	jQuery('#x').val(e.pageX);
+	jQuery('#y').val(e.pageY);
+	  });
+	})
+	function getSelText()
+	{
+		var txt = "";
+		if (window.getSelection){  txt = window.getSelection();   }
+	   else if (document.getSelection){ txt = document.getSelection();  }
+	   else if (document.selection){ txt = document.selection.createRange().text; }
+	   else return;
+	if(txt==""){return;}
+	jQuery('#popup').css("top",(jQuery("#y").val()) + "px");
+	jQuery('#popup').css("left",(jQuery("#x").val()) + "px");
+
+	jQuery('#popup').fadeIn(300);
+	jQuery('#dic_content').html("loading....");
+
+	if(ajaxObj!=""){ajaxObj.abort(); }
+
+	ajaxObj=jQuery.ajax({
+	 type: "GET",
+	 url: "http://ayar.co/remote_search.php?word=" +txt,
+	 success: function(content){
+	jQuery('#dic_content').html(content);
+	}
+	});
+
+	}
+	</script>
+<script type="text/javascript">
+document.ondblclick = function(){
+getSelText();
+};
+</script>
+
+<div id="popup" style="border:1px solid #999999;background:#cccccc;-moz-border-radius: 5px;-webkit-border-radius:5px;padding:10px;width:300px;height:auto;display:none;position:absolute;">
+<div id="dic_content"></div>
+</div>
+<input type="hidden" id="x"><input type="hidden" id="y">
+<?php
+}
+
+function add_toolbar(){
+	global $detect_lang, $lang;
+if (! wp_is_mobile()) {
+	if ( $detect_lang == 'yes'){
+		if (get_bloginfo('language') == 'my-MM' ){
+
+			add_action('wp_footer', 'a2zt_footer');
+			add_action('login_form', 'a2zt_footer');
+			add_action('register_form', 'a2zt_footer');
+			add_action('retrieve_password', 'a2zt_footer');
+			add_action('password_reset', 'a2zt_footer');
+			add_action('lostpassword_form', 'a2zt_footer');
+			//add_action('admin_footer', 'a2zt_footer');
+			//add_action('init', 'set_font_cookies');
+		} elseif ( isset($_GET['lang']) ){
+				$detected_lang = $_GET['lang'];
+			//	var_dump($detected_lang);
+				if ($detected_lang == 'my') {
+
+					add_action('wp_footer', 'a2zt_footer');
+					add_action('login_form', 'a2zt_footer');
+					add_action('register_form', 'a2zt_footer');
+					add_action('retrieve_password', 'a2zt_footer');
+					add_action('password_reset', 'a2zt_footer');
+					add_action('lostpassword_form', 'a2zt_footer');
+					}		
+		} else {
+		
+		}
+	} else {
+
+	add_action('wp_footer', 'a2zt_footer');
+	add_action('login_form', 'a2zt_footer');
+	add_action('register_form', 'a2zt_footer');
+	add_action('retrieve_password', 'a2zt_footer');
+	add_action('password_reset', 'a2zt_footer');
+	add_action('lostpassword_form', 'a2zt_footer');
+	//add_action('admin_footer', 'a2zt_footer');
+	//add_action('init', 'set_font_cookies');
+
+	}
+}
+}
+add_action( 'init', 'add_toolbar');
+add_action('init', 'get_font_cookies');
+function set_font_cookies(){
+	$reader_font = awk_option('reader_font');
+	setcookie('font',$reader_font);	
+	}
+
+function get_font_cookies(){
+	global $crawler, $written_font, $reader_font, $fonts_server, $fonts_server_url, $font_encoding;
+	$written_font = awk_option('written_font');
+	$reader_font = awk_option('reader_font');
+	//var_dump($crawler);
+//if ($crawler){
+//	if ($written_font == 'ayar'){
+	//	ayar_mm3();
+//		}
+//	if ($written_font == 'zawgyi'){
+//		zawgyi_mm3();
+//		}
+	//if (($reader_font == $written_font ) && ($reader_font == 'mm3')){
+		
+	//	}
+//	} else {
+	if(isset($_COOKIE['font'])){
+	$font_encoding = $_COOKIE['font'];
+	} elseif ($reader_font != ''){
+	$font_encoding = $reader_font;		
+	} else {
+	$font_encoding = 'zawgyi';	
+	}
+
+	if ( $written_font != '' ){		
+		if ( $written_font != $font_encoding){
+			$function = $written_font."_".$font_encoding;
+			$function();
+		} 
+	}
+	if ( $font_encoding == 'zawgyi') {
+		if ($fonts_server == 'other'){	
+			$fonts_server_url = awk_option('other_server_url');
+		}elseif ($fonts_server == 'same_domain'){
+			$fonts_server_url = AWK_PLUGIN_URL.'/includes/web-fonts.php';
+		}elseif ($fonts_server == 'default'){
+			$fonts_server_url = 'http://webfonts.ayar.co/base64css/';
+			}
+		$zawgyi_embed = 'zawgyi_embed';
+		$zawgyi_src = $fonts_server_url.'?font=zawgyi-one';
+		$deps = false;
+		$ver = false;
+		$media = 'All';
+		wp_register_style( $zawgyi_embed, $zawgyi_src, $deps, $ver, $media );
+		wp_enqueue_style( $zawgyi_embed );
+		function zg_dequeue(){
+
+		wp_dequeue_style('awk_fonts_family');
+		
+		}
+		add_action('wp_print_styles','zg_dequeue',999);
+		function zawgyi_font(){
+
+			echo <<<ZWG
+			<style type="text/css">
+			*{font-family:zawgyi-one, Zawgyi-One !important};
+			</style>
+
+ZWG;
+			}		
+		add_action('wp_head','zawgyi_font');
+		}
+	if ( $font_encoding == 'mm3') {
+		if ($fonts_server == 'other'){	
+			$fonts_server_url = awk_option('other_server_url');
+		}elseif ($fonts_server == 'same_domain'){
+			$fonts_server_url = AWK_PLUGIN_URL.'/includes/web-fonts.php';
+		}elseif ($fonts_server == 'default'){
+			$fonts_server_url = 'http://webfonts.ayar.co/base64css/';
+			}
+		$mm3_embed = 'mm3_embed';
+		$mm3_src = $fonts_server_url.'?font=padauk';
+		$deps = false;
+		$ver = false;
+		$media = 'All';
+		wp_register_style( $mm3_embed, $mm3_src, $deps, $ver, $media );
+		wp_enqueue_style( $mm3_embed );
+		function destyle_mm3(){
+		wp_dequeue_style('awk_fonts_family');
+		}
+		if ($written_font != 'mm3') {
+		add_action('wp_print_styles','destyle_mm3');
+		}
+		function mm3_font(){
+
+			echo <<<MM3
+			<style type="text/css">
+			*{font-family:Tharlon, Myanmar3, Tharlon, Padauk !important};
+			</style>
+
+MM3;
+			}		
+		add_action('wp_head','mm3_font');
+		}
+	//function add_awk_rewrite_ep(){
+
+		//}
+	//}
+}
+?>

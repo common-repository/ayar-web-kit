@@ -1,0 +1,57 @@
+<html>
+<head>
+<title>Detect text selection in page</title>
+<style type="text/css">
+body{font-family:verdana, tahoma, arial;font-size:11px}
+</style>
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.4.2/jquery.min.js"></script>
+<script language="javascript">
+var ajaxObj="";
+jQuery(document).ready(function(){
+  $(document).mousemove(function(e){
+ $('#x').val(e.pageX);
+ $('#y').val(e.pageY);
+  });
+})
+function getSelText()
+{
+	var txt = "";
+	txt = jQuery.trim(txt);
+    if (window.getSelection){  txt = window.getSelection();   }
+   else if (document.getSelection){ txt = document.getSelection();  }
+   else if (document.selection){ txt = document.selection.createRange().text; }
+   else return;
+if(txt==""){return;}
+jQuery('#popup').css("top",(jQuery("#y").val()) + "px");
+jQuery('#popup').css("left",(jQuery("#x").val()) + "px");
+
+jQuery('#popup').fadeIn(300);
+jQuery('#content').html("loading....");
+
+if(ajaxObj!=""){ajaxObj.abort(); }
+
+ajaxObj=jQuery.ajax({
+ type: "GET",
+ url: "http://ayar.co/remote_search.php?word=" +txt,
+ success: function(content){
+jQuery('#content').html(content);
+}
+});
+
+}
+</script>
+<script type="text/javascript">
+document.ondblclick = function(){
+getSelText();
+};
+</script>
+</head>
+<body>
+<div id="popup" style="border:1px solid #999999;background:#cccccc;-moz-border-radius: 5px;-webkit-border-radius:5px;padding:10px;width:300px;height:auto;display:none;position:absolute">
+<div id="content"></div>
+</div>
+<input type="hidden" id="x"><input type="hidden" id="y">
+Hello Box Shopping.<br/>
+Double click any word in the page and you will have its meaning.
+</body>
+</html>
